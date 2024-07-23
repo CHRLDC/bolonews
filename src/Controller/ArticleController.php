@@ -3,7 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Commentaire;
+use App\Form\CommentaireFormType;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,13 +39,13 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/article/{id}', name: 'article_details', methods: ['GET'])]
+    #[Route('/article/{id}', name: 'article_details', methods: ['GET', 'POST'])]
     /**
      * Rôle: Afficher un article par son id
      * Pour affichage de la page d'un article à l'Index
      * @param Article $article
      */
-    public function article(int $id, ArticleRepository $articleRepository): Response
+    public function article(Request $request, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
     {
         // Obtenire l'article par son id
         $article = $articleRepository->find($id);
@@ -51,9 +55,36 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('app_index');
         }
 
+        // Créer le formulaire d'ajout de commentaire
+        $commentaire = new Commentaire();
+        $commentaireForm = $this->createForm(CommentaireFormType::class, $commentaire);
+        $commentaireForm->handleRequest($request);
+
+        // Si le formulaire est envoyé et valide
+        if ($commentaireForm->isSubmitted() && $commentaireForm->isValid()) {
+            // Associer le commentaire à l'article
+            $commentaire->setArticle($article);
+
+            // Associer le commentaire à l'utilisateur connecté (si l'utilisateur est connecté)
+            $user = $this->getUser();
+            if ($user) {
+                $commentaire->setUser($user);
+            }
+            // Définir la date de publication
+            $commentaire->setDatePublication(new \DateTime());
+
+            // Ajouter le commentaire à la base de données
+            $entityManager->persist($commentaire);
+            $entityManager->flush();
+
+            // Rediriger vers l'article
+            return $this->redirectToRoute('article_details', ['id' => $article->getId()]);
+        }
+
         // Rendre la page d'un article à l'Index avec ses paramètres
         return $this->render('article/article.html.twig', [
-            'article' => $article
+            'article' => $article,
+            'form' => $commentaireForm->createView(),
         ]);
     }
 }

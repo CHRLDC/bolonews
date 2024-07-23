@@ -54,7 +54,6 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_index');
         }
 
-
         // Sinon afficher de nouveau le formulaire avec les données saisies
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,

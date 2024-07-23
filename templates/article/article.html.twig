@@ -1,21 +1,29 @@
 {# 
 Rôle: Affiche les détails d'un article
 @param: Article $article
- #}
+#}
 
 {% extends 'base.html.twig' %}
 
 {% block main %}
+
 	{# Afficher le détails de l'article #}
-	{% include 'article/_details_article.html.twig' with {'article': article} %}
+	{% include 'article/_details_article.html.twig' %}
 	<span class="flex justify-center mB80 mT80">
 		<img src="{{ asset('assets/line.png') }}" alt="" class="w80">
 	</span>
 	<div class="container-1200">
 		<h3 class="mB50">Commentaires:</h3>
+
+		{# Afficher les commentaires de l'article #}
+		{% include 'commentaire/_liste_commentaires.html.twig' %}
+
+		{# Afficher le form ajout commentaire (si utilisateur connecté) #}
+		{% if app.user %}
+			{% include 'commentaire/_form_ajout_commentaire.html.twig' %}
+		{% else %}
+			<p class="mB80">Vous devez être connecté pour ajouter un commentaire.</p>
+		{% endif %}
+
 	</div>
-	{# Afficher les commentaires de l'article #}
-	{% include 'commentaire/_liste_commentaires.html.twig' with {'commentaires': article.commentaires} %}
-	{# Afficher le form ajout commentaire (si utilisateur connecté) #}
-	{% include 'commentaire/_form_ajout_commentaire.html.twig' with {'article': article} %}
 {% endblock %}

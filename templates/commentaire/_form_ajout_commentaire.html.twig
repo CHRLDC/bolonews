@@ -1,17 +1,11 @@
-{% block main %}
-	<main class="container-1200 pT50">
-		<p class="texte-center form-title mB30">Créer votre compte</p>
+<div class="container-1200 pT50">
+	{{ form_start(form, { 'attr': { 'class': 'form-register' } }) }}
 
-		{{ form_errors(commentaireForm) }}
+	<div class="form-group">
+		{{ form_row(form.contenu, { 'attr': { 'class': 'form-control' } }) }}
+	</div>
 
-		{{ form_start(commentaireForm, { 'attr': { 'class': 'form-register' } }) }}
+	<button type="submit" class="btn-submit">Envoyer le commentaire</button>
 
-		<div class="form-group">
-			{{ form_row(commentaireForm.message, { 'attr': { 'class': 'form-control' } }) }}
-		</div>
-
-		<button type="submit" class="btn-submit">Envoyer le commentaire</button>
-
-		{{ form_end(commentaireForm) }}
-	</main>
-{% endblock %}
+	{{ form_end(form) }}
+</div>
