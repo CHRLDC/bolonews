@@ -1,0 +1,52 @@
+{# 
+Rôle: Fragment qui affiche l'article à la une (le plus populaire, nb_like, nb_commentaires)
+@param Article $articleUne Article à la une
+ #}
+
+<article>
+	<a href="{{ path('article_details', {'id': articleUne.id}) }}" class="flex justify-between">
+		<div class="image-une w50">
+			<img src="{{ asset('image_article/' ~ articleUne.image) }}" alt="" class="bR8">
+		</div>
+		<div
+			class="w50 flex direction-column justify-between">
+			<!-- Container flex pour les catégories -->
+			<div class="flex gap16">
+				{% for categorie in articleUne.Categorie %}
+					<p class="categorie">
+						{{ categorie.libelle }}
+					</p>
+				{% endfor %}
+			</div>
+			<h2>{{ articleUne.titre }}</h2>
+			<p>{{ articleUne.chapeau }}</p>
+			<!-- Container Profil -->
+			<div>
+				<div class="flex align-center">
+					<div class="photo-profil">
+						<img src="{{ asset('private/img_profils/' ~ articleUne.user.photo)}}" alt="">
+					</div>
+					<p>{{ articleUne.user.pseudo }}</p>
+				</div>
+			</div>
+			<!-- Container date heure -->
+			<div class="flex justify-between align-center">
+				<p>publié le
+					{{ articleUne.dateCreation|date('d/m/Y') }}
+					à
+					{{ articleUne.dateCreation|date('H:i') }}</p>
+				<!-- Container like et commentaires -->
+				<div class="flex gap24">
+					<div class="flex">
+						<img class="picto" src="./assets/message-circle.svg" alt="">
+						<p>{{ articleUne.commentaires|length }}</p>
+					</div>
+					<div class="flex">
+						<img class="picto" src="./assets/coeur.svg" alt="">
+						<p>{{ articleUne.likes|length }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</a>
+</article>

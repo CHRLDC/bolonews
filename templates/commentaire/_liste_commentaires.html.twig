@@ -1,0 +1,26 @@
+{# 
+Rôle: Fragment qui affiche les commentaires d'un article
+@param $commentaires 
+ #}
+
+{% for commentaire in commentaires %}
+	<section class="container-1200">
+		<div class="commentaire mB20">
+			<div class="mB20">
+				<div class="flex align-center">
+					<div class="photo-profil">
+						<img src="{{ asset('private/img_profils/' ~ commentaire.user.photo)}}" alt="">
+					</div>
+					<p>
+						<b>{{ commentaire.user.pseudo }}</b>
+					</p>
+				</div>
+			</div>
+			<p>{{ commentaire.contenu }}</p>
+			<p class="texte-right  date">Posté le
+				{{ commentaire.datePublication|date('d/m/Y') }}
+				à
+				{{ commentaire.datePublication|date('H:i') }}</p>
+		</div>
+	</section>
+{% endfor %}

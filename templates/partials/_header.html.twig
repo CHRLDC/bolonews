@@ -1,0 +1,45 @@
+<!-- HEADER -->
+<header>
+	<nav class="flex justify-between pT10">
+		<ul>
+			<li>
+				<a href="{{ path('app_index') }}" class="text-header">Bolonews</a>
+			</li>
+		</ul>
+		<ul class="flex gap16 mL130">
+			<li>
+				<a href="{{ path('app_index') }}" class="text-header">Home</a>
+			</li>
+			<li>
+				<a href="" class="text-header">Articles</a>
+			</li>
+			<li>
+				<a href="" class="text-header">Contact</a>
+			</li>
+		</ul>
+		<ul class="flex gap16">
+			{% if app.user %}
+				<!-- Si l'utilisateur est connecté -->
+				<li>
+					<a href="" class="text-header">Mon espace</a>
+				</li>
+				<li>
+					<a href="{{ path('app_logout') }}" class="text-header">Se déconnecter</a>
+				</li>
+			{% else %}
+				<!-- Si l'utilisateur n'est pas connecté -->
+				<li>
+					<a href="{{ path('app_login') }}" class="text-header">Se connecter</a>
+				</li>
+				<li>
+					<a href="{{ path('app_register') }}" class="text-header">M'inscrire</a>
+				</li>
+			{% endif %}
+		</ul>
+	</nav>
+	<p class="title texte-center pT30">Bolonews</p>
+	<h1 class="texte-center mB20">Les meilleures sauces pour les pâtes et de l’actualité sur le grill</h1>
+</header>
+<span class="flex justify-center mB20">
+	<img src="{{ asset('assets/line.png') }}" alt="" class="w80">
+</span>

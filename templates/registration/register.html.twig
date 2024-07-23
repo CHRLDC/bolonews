@@ -1,19 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscrivez-vous !
+{% endblock %}
 
-{% block body %}
-    <h1>Register</h1>
+{% block main %}
+	<main class="container-1200 pT50">
+		<p class="texte-center form-title mB30">Créer votre compte</p>
 
-    {{ form_errors(registrationForm) }}
+		{{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+		{{ form_start(registrationForm, { 'attr': { 'class': 'form-register' } }) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+		<div class="form-group">
+			{{ form_row(registrationForm.email, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(registrationForm.pseudo, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(registrationForm.plainPassword, {
+                'label': 'Mot de passe',
+                'attr': { 'class': 'form-control' }
+            }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(registrationForm.photo, {
+                'attr': { 'class': 'form-control' }
+            }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(registrationForm.agreeTerms, {
+                'attr': { 'class': 'form-check-input' }
+            }) }}
+		</div>
+
+		<button type="submit" class="btn-submit">Créer le compte</button>
+
+		{{ form_end(registrationForm) }}
+	</main>
 {% endblock %}

@@ -1,0 +1,61 @@
+{# 
+Rôle: Fragment qui affiche les détails d'un l'article
+@param Article $article
+ #}
+<article class="container-1200">
+	<div
+		class="details-article">
+		<!-- Container flex pour les catégories -->
+		<div class="flex gap16 mB20 mT80">
+			{% for categorie in article.Categorie %}
+				<p class="categorie">
+					{{ categorie.libelle }}
+				</p>
+			{% endfor %}
+		</div>
+
+		<!-- Container Titre -->
+		<h2>{{ article.titre }}</h2>
+
+		<!-- Container date publication -->
+		<p class="texte-right  date">{{ article.dateCreation|date('d/m/Y') }}
+			à
+			{{ article.dateCreation|date('H:i') }}</p>
+
+		<!-- Container Chapeau -->
+		<p class="article-summary">{{ article.chapeau }}</p>
+
+		<!-- Container image -->
+		<div class="w80 mAuto">
+			<img src="{{ asset('image_article/' ~ article.image) }}" alt="" class="bR8">
+		</div>
+		<div
+			class="w100">
+
+			<!-- Container Texte -->
+			<p class="mB20">{{ article.texte }}</p>
+			<!-- Container Profil -->
+			<div class="flex justify-between align-center">
+				<div class="flex align-center">
+					<div class="photo-profil">
+						<img src="{{ asset('private/img_profils/' ~ article.user.photo)}}" alt="">
+					</div>
+					<p>{{ article.user.pseudo }}</p>
+				</div>
+
+
+				<!-- Container compteur like et commentaire -->
+				<div class="flex gap24">
+					<div class="flex">
+						<img class="picto" src="{{ asset('assets/message-circle.svg') }}" alt="">
+						<p>{{ article.commentaires|length }}</p>
+					</div>
+					<div class="flex">
+						<img class="picto" src="{{ asset('assets/coeur.svg') }}" alt="">
+						<p>{{ article.likes|length }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</article>

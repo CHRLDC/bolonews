@@ -1,20 +1,30 @@
+{# 
+Rôle: Affiche la page principale à l'Index
+@param: array $liste_derniers_articles
+@param: Article $articleUne
+ #}
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ArticleController!{% endblock %}
+{% block main %}
+	<section class="container-1200">
+		<div class="mB120 mT80">
+			<h1 class="title-container mB20">À la une !</h1>
+			{% include 'article/_card_une.html.twig' %}
+		</div>
+	</section>
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/bolonews/src/Controller/ArticleController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/bolonews/templates/article/index.html.twig</code></li>
-    </ul>
-</div>
+	<section class="container-1200">
+		<div class="mB80">
+			<h2 class="title-container mB20">Dernières parutions</h2>
+			<div
+				class="articles-container flex gap16">
+				{# liste des 4 derniers articles #}
+				{% for article in liste_derniers_articles %}
+					{# include 'article/_card_article.html.twig' avec son paramètre article #}
+					{% include 'article/_card_article.html.twig' with {'article': article} %}
+				{% endfor %}
+			</div>
+		</div>
+	</section>
 {% endblock %}

@@ -1,0 +1,43 @@
+{# 
+Rôle: Fragment qui affiche une carte article
+@param Article $article un Article
+ #}
+
+<article class="card-article flex justify-between">
+	<div class="w50 img-card">
+		<img src="{{ asset('image_article/' ~ article.image) }}" alt="" class="bR8L">
+	</div>
+	<div
+		class="w50">
+		<!-- Container flex pour les catégories -->
+		<div class="flex gap16">
+			{% for categorie in article.Categorie %}
+				<p class="categorie">
+					{{ categorie.libelle }}
+				</p>
+			{% endfor %}
+		</div>
+		<h3>{{ article.titre }}</h3>
+		<p class="author-name">{{ article.user.pseudo }}</p>
+		<p class="texte-right  date">{{ article.dateCreation|date('d/m/Y') }}
+			à
+			{{ article.dateCreation|date('H:i') }}</p>
+		<p class="article-summary">{{ article.chapeau }}</p>
+		<div>
+			<a href="{{ path('article_details', {'id': article.id}) }}" class="flex justify-between w20 texte-right mB20 read-more-container align-center">
+				<p>Lire la suite</p>
+				<img class="arrow" src="./assets/arrow-right.svg" alt="">
+			</a>
+		</div>
+		<div class="flex gap24">
+			<div class="flex">
+				<img class="picto" src="./assets/message-circle.svg" alt="">
+				<p>{{ article.commentaires|length }}</p>
+			</div>
+			<div class="flex">
+				<img class="picto" src="./assets/coeur.svg" alt="">
+				<p>{{ article.likes|length }}</p>
+			</div>
+		</div>
+	</div>
+</article>
