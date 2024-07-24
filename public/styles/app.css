@@ -524,3 +524,7 @@ footer {
 .details-article>* {
     margin-bottom: 30px;
 }
+
+.like-icon.liked {
+    filter: brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(1000%) hue-rotate(160deg) brightness(90%) contrast(90%);
+}

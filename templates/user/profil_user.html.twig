@@ -58,20 +58,5 @@
 
 		{{ form_end(form) }}
 	</div>
-	<!-- JS -->
-	<script>
-		function toggleEditMode() {
-var infoDiv = document.getElementById('profile-info');
-var editDiv = document.getElementById('edit-profile');
-var isEditing = editDiv.style.display === 'block';
-
-if (isEditing) {
-infoDiv.style.display = 'block';
-editDiv.style.display = 'none';
-} else {
-infoDiv.style.display = 'none';
-editDiv.style.display = 'block';
-}
-}
-	</script>
+	<script src="{{ asset('js/app.js') }}"></script>
 {% endblock %}
