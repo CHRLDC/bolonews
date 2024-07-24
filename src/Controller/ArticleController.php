@@ -46,6 +46,7 @@ class ArticleController extends AbstractController
         ArticleRepository $articleRepository,
         CategorieRepository $categorieRepository,
         Request $request,
+        // Si il y a un libelle en paramètre, sinon null
         ?string $libelle = null,
     ): Response {
 
