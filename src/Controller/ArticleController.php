@@ -36,7 +36,7 @@ class ArticleController extends AbstractController
         $articleUne = $articleRepository->find($articleId);
 
         // Obtenir la liste des dernières articles parus
-        $liste_derniers_articles = $articleRepository->findBy([], ['id' => 'DESC'], 4);
+        $liste_derniers_articles = $articleRepository->findBy(['publie' => true], ['id' => 'DESC'], 4);
 
         // Rendre la page principale à l'Index avec ses paramètres
         return $this->render('article/index.html.twig', [
@@ -61,6 +61,7 @@ class ArticleController extends AbstractController
         // Valeurs par défaut
         $search = '';
         $isSearch = false;
+        $articles = [];
 
         // Si une recherche est soumise et valide
         if ($form->isSubmitted() && $form->isValid()) {
@@ -83,11 +84,11 @@ class ArticleController extends AbstractController
 
         // Si aucun article n'est trouvé, chercher tous les articles
         if (empty($articles)) {
-            $articles = $articleRepository->findAll();
+            $articles = $articleRepository->findAll(['publie' => true]);
         }
 
         // Obtenir la liste de toutes les catégories
-        $categories = $categorieRepository->findAll();
+        $categories = $categorieRepository->findAll(['publie' => true]);
 
         // Rendre la page des articles
         return $this->render('article/liste_article.html.twig', [

@@ -28,26 +28,30 @@ class ArticleRepository extends ServiceEntityRepository
             // Jointure avec les likes et les commentaires
             ->leftJoin('a.likes', 'l')
             ->leftJoin('a.commentaires', 'c')
-            // Filtrer les articles qui ont le plus de likes et commentaires
+            // Filtrer pour obtenir seulement les articles publiés
+            ->where('a.publie = :publie')
+            ->setParameter('publie', true)
+            // Sélectionner l'article et compter les likes et commentaires
             ->select('a.id')
-            // Compter le nombre de likes et de commentaires
             ->addSelect('COUNT(l.id) AS HIDDEN likes_count')
             ->addSelect('COUNT(c.id) AS HIDDEN commentaires_count')
-            // Groupe par article
+            // Grouper par article
             ->groupBy('a.id')
-            // Trier pour avoir en 1er l'article le plus populaire
+            // Trier pour avoir en premier l'article le plus populaire
             ->orderBy('likes_count', 'DESC')
             ->addOrderBy('commentaires_count', 'DESC')
             // Se limiter au premier article
             ->setMaxResults(1);
 
-        // Executer la requête, et récupérer le 1er article
+        // Exécuter la requête, et récupérer le premier article
         $result = $qb->getQuery()->getOneOrNullResult();
 
         // Si aucun article n'est trouvé, obtenir l'ID du premier article de la liste existant
         if ($result === null) {
             $qbFallback = $this->createQueryBuilder('a')
                 ->select('a.id')
+                ->where('a.publie = :publie')
+                ->setParameter('publie', true)
                 ->setMaxResults(1)
                 ->orderBy('a.id', 'ASC'); // Obtenir le premier article par ID croissant
 
@@ -62,6 +66,19 @@ class ArticleRepository extends ServiceEntityRepository
 
         // Retourner l'ID de l'article le plus populaire
         return $result['id'];
+    }
+
+
+    /**
+     * Trouver tous les articles publiés
+     */
+    public function findAllPublie()
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.publie = :publie')
+            ->setParameter('publie', true)
+            ->getQuery()
+            ->getResult();
     }
 
 

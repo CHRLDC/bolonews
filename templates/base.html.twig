@@ -22,8 +22,16 @@ Template de base: affiche la page de base
 	<body>
 		{# Fragment HEADER #}
 		{% include 'partials/_header.html.twig' %}
+
+		{# Block MAIN #}
 		{% block main %}{% endblock %}
+
+		{# Fragment FOOTER #}
+		{% include 'partials/_footer.html.twig' %}
+
+		{# Block JAVASCRIPT #}
+		{% block javascripts %}
+			<script src="{{ asset('js/app.js') }}"></script>
+		{% endblock %}
 	</body>
-	{# Fragment FOOTER #}
-	{% include 'partials/_footer.html.twig' %}
 </html>
