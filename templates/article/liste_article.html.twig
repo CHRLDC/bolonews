@@ -1,0 +1,45 @@
+{# 
+Rôle: Affiche une liste d'article
+@param: Liste d'articles $articles
+@param: Form $form formulaire de recherche
+@param: Categorie[] $categories liste des catégories
+#}
+
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {{ form_start(form, { 'attr': { 'class': 'form-register' } }) }}
+
+    <div class="form-group">
+        {{ form_row(form.search, { 'attr': { 'class': 'form-control' } }) }}
+    </div>
+
+    <button type="submit" class="btn-submit">Rechercher</button>
+
+    {{ form_end(form) }}
+
+    <span class="flex justify-center mB20 mT20">
+        <img src="{{ asset('assets/line.png') }}" alt="" class="w80">
+    </span>
+
+    <div class="container-1200 flex justify-center gap16">
+        {% for categorie in categories %}
+            <a href="{{ path('liste_article', {'libelle': categorie.libelle}) }}" class="categorie">
+                {{ categorie.libelle }}
+            </a>        
+        {% endfor %}
+    </div>
+
+    <section class="container-1200">
+        {% if isSearch %}
+            <h3 class="mT20">Résultat de votre recherche</h3>
+        {% endif %}
+        <div class="flex gap16 mT80">
+            {% for article in articles %}
+                {% include 'article/_card_article.html.twig' %}
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
+

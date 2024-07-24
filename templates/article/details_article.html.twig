@@ -22,7 +22,8 @@ Rôle: Affiche les détails d'un article
 		{% if app.user %}
 			{% include 'commentaire/_form_ajout_commentaire.html.twig' %}
 		{% else %}
-			<p class="mB80">Vous devez être connecté pour ajouter un commentaire.</p>
+			<p class="mB80"><a href="{{ path('app_login') }}"><u><b>Connectez-vous</b></u></a> pour ajouter un commentaire.</p>
+
 		{% endif %}
 
 	</div>

@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\Commentaire;
 use App\Form\CommentaireFormType;
+use App\Form\RechercheArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,15 +41,63 @@ class ArticleController extends AbstractController
         ]);
     }
 
+    #[Route('/articles/{libelle}', name: 'liste_article', methods: ['GET', 'POST'])]
+    public function liste(
+        ArticleRepository $articleRepository,
+        CategorieRepository $categorieRepository,
+        Request $request,
+        ?string $libelle = null,
+    ): Response {
+
+        // Créer le formulaire de recherche
+        $form = $this->createForm(RechercheArticleType::class);
+        $form->handleRequest($request);
+
+        // Valeurs par défaut
+        $search = '';
+        $isSearch = false;
+
+        // Si une recherche est soumise et valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            $search = $form->get('search')->getData();
+            if (!empty($search)) {
+                // Chercher les articles correspondant à la valeur du champ
+                $articles = $articleRepository->rechercheArticle($search);
+                $isSearch = true;
+            }
+        }
+
+        // Filtrer par catégorie si libelle est fourni en method GET
+        if ($request->isMethod('GET')) {
+            $categorie = $categorieRepository->findOneBy(['libelle' => $libelle]);
+            if (!empty($categorie)) {
+                $articles = $categorie->getArticles();
+                $isSearch = true;
+            }
+        }
+
+        // Si aucun article n'est trouvé, chercher tous les articles
+        if (empty($articles)) {
+            $articles = $articleRepository->findAll();
+        }
+
+        // Obtenir la liste de toutes les catégories
+        $categories = $categorieRepository->findAll();
+
+        // Rendre la page des articles
+        return $this->render('article/liste_article.html.twig', [
+            'articles' => $articles,
+            'form' => $form->createView(),
+            'isSearch' => $isSearch,
+            'categories' => $categories,
+            'search' => $search
+        ]);
+    }
+
     #[Route('/article/{id}', name: 'article_details', methods: ['GET', 'POST'])]
-    /**
-     * Rôle: Afficher un article par son id
-     * Pour affichage de la page d'un article à l'Index
-     * @param Article $article
-     */
     public function article(Request $request, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
     {
-        // Obtenire l'article par son id
+        // Obtenir l'article par son id
         $article = $articleRepository->find($id);
 
         // Si aucun article n'est trouvé, rediriger vers l'accueil
@@ -82,7 +132,7 @@ class ArticleController extends AbstractController
         }
 
         // Rendre la page d'un article à l'Index avec ses paramètres
-        return $this->render('article/article.html.twig', [
+        return $this->render('article/details_article.html.twig', [
             'article' => $article,
             'form' => $commentaireForm->createView(),
         ]);

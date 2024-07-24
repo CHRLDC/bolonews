@@ -65,6 +65,24 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * Rechercher des articles par titre, chapeau ou texte.
+     *
+     * @param string $search
+     * @return Article[]
+     */
+    public function rechercheArticle(string $search): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.titre LIKE :search')
+            ->orWhere('a.chapeau LIKE :search')
+            ->orWhere('a.texte LIKE :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     //    /**
     //     * @return Article[] Returns an array of Article objects
     //     */
