@@ -1,0 +1,39 @@
+{# 
+Rôle: Affiche une liste d'article
+@param: Liste d'articles publiés de l'utilisateur $articlesPubliés
+@param: Liste d'articles non publiés de l'utilisateur $articlesNonPubliés
+#}
+
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	<section class="container-1200">
+		<div class="mT80"></div>
+		<a href="{{ path('article_new') }}" class="btn-submit">Créer un nouvel article</a>
+		<div class="mT80"></div>
+		<h3 class="mB50">Mes articles Publiés</h3>
+		<div class="flex gap16 mT40">
+			{% for article in articlesPublies %}
+				{% include 'article/_card_article.html.twig' with {'article': article} %}
+			</div>
+			{# Si l'utilisateur propriétaire de l'article est l'utilisateur connecté, afficher le lien #}
+			{% if (article.user == app.user) %}
+				<a href="{{ path('article_edit', {'id': article.id}) }}" class="btn-submit">Modifier</a>
+			{% endif %}
+		{% endfor %}
+
+	</section>
+	<div class="mT80"></div>
+	<section class="container-1200">
+		<h3 class="mT20 mB50">Mes articles Non Publiés</h3>
+		<div class="flex gap16 mT40">
+			{% for article in articlesNonPublies %}
+				{% include 'article/_card_article.html.twig' with {'article': article} %}
+
+			</div>
+			{% if (article.user == app.user) %}
+				<a href="{{ path('article_edit', {'id': article.id}) }}" class="btn-submit">Modifier</a>
+			{% endif %}
+		{% endfor %}
+	</section>
+{% endblock %}

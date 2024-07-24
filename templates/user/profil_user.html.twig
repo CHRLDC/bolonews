@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	<div class="container-1200 pT50">
+		<h3>Votre profil</h3>
+		{{ form_start(form, { 'attr': { 'class': 'form-register' } }) }}
+		<!-- Affichage des Informations -->
+		<div id="profile-info">
+			<div class="form-group">
+				<label class="form-label">
+					<b>Photo de profil</b>
+				</label>
+				{% if User.photo %}
+					<img class="image-profil" src="{{ asset('private/img_profils/' ~ User.photo) }}" alt="Photo de profil">
+				{% endif %}
+			</div>
+			<div>
+				<div class="form-group">
+					<label class="form-label">
+						<b>Email</b>
+					</label>
+					<p class="form-control-static">{{ User.email }}</p>
+				</div>
+
+				<div class="form-group">
+					<label class="form-label">
+						<b>Pseudo</b>
+					</label>
+					<p class="form-control-static">{{ User.pseudo }}</p>
+				</div>
+			</div>
+			<button type="button" class="btn-submit" onclick="toggleEditMode()">Modifier</button>
+		</div>
+	</div>
+	<!-- Mode Édition -->
+	<div id="edit-profile" style="display: none;">
+		<div class="container-1200">
+
+			<div class="form-group">
+				{{ form_row(form.email, { 'attr': { 'class': 'form-control' } }) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_row(form.pseudo, { 'attr': { 'class': 'form-control' } }) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_row(form.password, { 'attr': { 'class': 'form-control' } }) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_row(form.photo, { 'attr': { 'class': 'form-control-file' } }) }}
+			</div>
+
+			<button type="submit" class="btn-submit">Sauvegarder</button>
+			<button type="button" class="btn-submit" onclick="toggleEditMode()">Annuler</button>
+		</div>
+
+		{{ form_end(form) }}
+	</div>
+	<!-- JS -->
+	<script>
+		function toggleEditMode() {
+var infoDiv = document.getElementById('profile-info');
+var editDiv = document.getElementById('edit-profile');
+var isEditing = editDiv.style.display === 'block';
+
+if (isEditing) {
+infoDiv.style.display = 'block';
+editDiv.style.display = 'none';
+} else {
+infoDiv.style.display = 'none';
+editDiv.style.display = 'block';
+}
+}
+	</script>
+{% endblock %}

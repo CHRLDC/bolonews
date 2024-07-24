@@ -53,6 +53,11 @@ img {
     background-color: var(--color-secondary);
 }
 
+.image-profil {
+    width: 200px;
+    border-radius: 8px;
+}
+
 .arrow {
     width: 24px;
     height: 24px;
@@ -173,7 +178,7 @@ img {
 }
 
 .mL130 {
-    margin-left: 130px;
+    margin-left: 220px;
 }
 
 .mL30 {
@@ -198,6 +203,10 @@ img {
 
 .mR {
     margin-right: 30px;
+}
+
+.pT80 {
+    padding-top: 80px;
 }
 
 .pT50 {
@@ -364,6 +373,8 @@ h3 {
 
 footer {
     color: var(--color-white);
+    margin-top: 120px;
+    padding: 32px 0;
 }
 
 .footer-container {

@@ -4,15 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Entity\Commentaire;
+use App\Form\NewArticleFormType;
 use App\Form\CommentaireFormType;
 use App\Form\RechercheArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[Route('/')]
 class ArticleController extends AbstractController
@@ -41,7 +45,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/articles/{libelle}', name: 'liste_article', methods: ['GET', 'POST'])]
+    #[Route('/articles/categorie={libelle}', name: 'liste_article', methods: ['GET', 'POST'], requirements: ['libelle' => '^(?!new$).*'])]
     public function liste(
         ArticleRepository $articleRepository,
         CategorieRepository $categorieRepository,
@@ -95,7 +99,7 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/article/{id}', name: 'article_details', methods: ['GET', 'POST'])]
+    #[Route('/article/id={id}', name: 'article_details', methods: ['GET', 'POST'], requirements: ['libelle' => '^(?!new$).*'])]
     public function article(Request $request, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
     {
         // Obtenir l'article par son id
@@ -136,6 +140,137 @@ class ArticleController extends AbstractController
         return $this->render('article/details_article.html.twig', [
             'article' => $article,
             'form' => $commentaireForm->createView(),
+        ]);
+    }
+
+
+    #[Route('/espace', name: 'espace_user', methods: ['GET', 'POST'])]
+    public function espaceUser(ArticleRepository $articleRepository, Security $security): Response
+    {
+        // Récupère l'utilisateur connecté
+        $user = $security->getUser();
+
+        // Obtenir les articles de l'utilisateur non publiés
+        $articlesNonPublies = $articleRepository->findBy([
+            'User' => $user,
+            'publie' => false,
+        ]);
+
+        // Obtenir les articles de l'utilisateur publiés
+        $articlesPublies = $articleRepository->findBy([
+            'User' => $user,
+            'publie' => true,
+        ]);
+
+        return $this->render('user/espace_user.html.twig', [
+            'articlesNonPublies' => $articlesNonPublies,
+            'articlesPublies' => $articlesPublies,
+        ]);
+    }
+
+    #[Route('/article/new', name: 'article_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        // Créer un nouvel objet Article
+        $article = new Article();
+
+        // Créer le formulaire de création d'un nouvel article
+        $form = $this->createForm(NewArticleFormType::class, $article);
+        $form->handleRequest($request);
+
+        // Si le formulaire est soumis
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer l'utilisateur connecté
+            $user = $this->getUser();
+
+            if ($user) {
+                // Associer l'article à l'utilisateur connecté
+                $article->setUser($user);
+            }
+
+            // Récupérer la photo envoyée par l'utilisateur
+            $photoFichier = $form->get('image')->getData();
+
+            // Si une photo a été envoyée
+            if ($photoFichier) {
+                // Générer un nom unique pour le fichier
+                $originalFilename = pathinfo($photoFichier->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFichier->guessExtension();
+
+                try {
+                    // Déplacer le fichier vers le répertoire configuré
+                    $photoFichier->move(
+                        $this->getParameter('photos_article_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Gérer l'exception si nécessaire
+                    $this->addFlash('error', 'Une erreur est survenue lors du téléchargement de l\'image.');
+                    return $this->redirectToRoute('article_new');
+                }
+
+                // Mettre à jour le nom de la photo dans l'entité
+                $article->setImage($newFilename);
+            }
+
+            // Définir la date de création et de modification avec la date du jour
+            $article->setDateCreation(new \DateTime());
+            $article->setDateModification(new \DateTime());
+
+            // Enregistrer l'article dans la base de données
+            $entityManager->persist($article);
+            $entityManager->flush();
+
+            // Ajouter un message flash et rediriger vers les détails de l'article
+            $this->addFlash('success', 'Article créé avec succès.');
+            return $this->redirectToRoute('article_details', ['id' => $article->getId()]);
+        }
+
+        // Sinon afficher de nouveau le formulaire avec les données saisies
+        return $this->render('article/new_article.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+
+    #[Route('/article/{id}/edit', name: 'article_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, EntityManagerInterface $entityManager, int $id): Response
+    {
+        // Trouver l'article à éditer
+        $article = $entityManager->getRepository(Article::class)->find($id);
+
+        // Si l'article n'existe pas, rediriger vers la liste des articles
+        if (!$article) {
+            $this->addFlash('error', 'Article non trouvé.');
+            return $this->redirectToRoute('liste_article');
+        }
+
+        // Créer le formulaire avec les données de l'article
+        $form = $this->createForm(NewArticleFormType::class, $article);
+        $form->handleRequest($request);
+
+        // Si le formulaire est soumis et valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Définir la date de modification avec la date du jour
+            $article->setDateModification(new \DateTime());
+
+            // Sauvegarder les modifications dans la base de données
+            $entityManager->persist($article);
+            $entityManager->flush();
+
+            // Ajouter un message flash pour indiquer le succès
+            $this->addFlash('success', 'Article mis à jour avec succès.');
+
+            // Rediriger vers la page de détails de l'article
+            return $this->redirectToRoute('article_details', ['id' => $article->getId()]);
+        }
+
+        // Rendre le formulaire d'édition
+        return $this->render('article/edit_article.html.twig', [
+            'form' => $form->createView(),
+            'article' => $article,
         ]);
     }
 }

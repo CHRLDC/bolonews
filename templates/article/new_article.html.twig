@@ -1,0 +1,41 @@
+{# templates/article/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Nouvel Article
+{% endblock %}
+
+{% block main %}
+	<div class="container-1200 pT50">
+		<h3 class="mB50">Créer un Nouvel Article</h3>
+
+		{{ form_errors(form) }}
+
+		{{ form_start(form, { 'attr': { 'class': 'form-article' } }) }}
+
+		<div class="form-group">
+			{{ form_row(form.titre, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.chapeau, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.texte, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.image, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.publie, { 'attr': { 'class': 'form-check-input' } }) }}
+			<p class="mT20">Si l'article n'est pas publié tout de suite, il sera enregristré dans vos brouillons</p>
+		</div>
+
+		<button type="submit" class="btn-submit">Enregistrer l'article</button>
+
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

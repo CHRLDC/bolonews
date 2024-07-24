@@ -1,6 +1,6 @@
 <!-- HEADER -->
 <header>
-	<nav class="flex justify-between pT10">
+	<nav class="flex justify-between pT10 align-center">
 		<ul>
 			<li>
 				<a href="{{ path('app_index') }}" class="text-header">Bolonews</a>
@@ -17,14 +17,21 @@
 				<a href="" class="text-header">Contact</a>
 			</li>
 		</ul>
-		<ul class="flex gap16">
+		<ul class="flex gap16 align-center">
 			{% if app.user %}
 				<!-- Si l'utilisateur est connecté -->
 				<li>
-					<a href="" class="text-header">Mon espace</a>
+					<a href="{{ path('espace_user') }}" class="text-header">Mon espace</a>
 				</li>
 				<li>
 					<a href="{{ path('app_logout') }}" class="text-header">Se déconnecter</a>
+				</li>
+				<li>
+					<a href="{{ path('app_profilUser') }}" class="text-header">
+						<div class="photo-profil">
+							<img src="{{ asset('private/img_profils/' ~ app.user.photo)}}" alt="">
+						</div>
+					</a>
 				</li>
 			{% else %}
 				<!-- Si l'utilisateur n'est pas connecté -->

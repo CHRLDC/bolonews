@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Éditer l'Article
+{% endblock %}
+
+{% block main %}
+	<div class="container-1200 pT50">
+		<h3 class="mB50">Éditer l'Article</h3>
+
+		{{ form_errors(form) }}
+
+		{{ form_start(form, { 'attr': { 'class': 'form-article' } }) }}
+
+		<div class="form-group">
+			{{ form_row(form.titre, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.chapeau, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.texte, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+
+			<div class="current-image">
+				<p>Image actuelle :</p>
+				<img src="{{ asset('image_article/' ~ article.image) }}" alt="Image actuelle" class="image-article" style="max-width: 200px;">
+			</div>
+
+			{{ form_row(form.image, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.publie, { 'attr': { 'class': 'form-check-input' } }) }}
+			<p class="mT20">Si l'article n'est pas publié tout de suite, il sera enregistré dans vos brouillons.</p>
+		</div>
+
+		<button type="submit" class="btn-submit">Mettre à jour l'article</button>
+		<a href="{{ path('espace_user') }}">Retour</a>
+
+		{{ form_end(form) }}
+	</div>
+{% endblock %}
