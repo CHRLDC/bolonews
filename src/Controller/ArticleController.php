@@ -7,17 +7,19 @@ use App\Entity\Commentaire;
 use App\Form\NewArticleFormType;
 use App\Form\CommentaireFormType;
 use App\Form\RechercheArticleType;
+use App\Repository\LikeRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
-use App\Repository\LikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 #[Route('/')]
 class ArticleController extends AbstractController
@@ -109,6 +111,7 @@ class ArticleController extends AbstractController
 
         // Si aucun article n'est trouvé, rediriger vers l'accueil
         if (!$article) {
+            $this->addFlash('error', 'Article non trouvé.');
             return $this->redirectToRoute('app_index');
         }
 
@@ -286,5 +289,45 @@ class ArticleController extends AbstractController
             'form' => $form->createView(),
             'article' => $article,
         ]);
+    }
+
+    #[Route('/article/{id}/delete', name: 'article_delete', methods: ['POST', 'GET'])]
+    public function delete(Request $request, EntityManagerInterface $entityManager, int $id): RedirectResponse
+    {
+        // Trouver l'article à supprimer
+        $article = $entityManager->getRepository(Article::class)->find($id);
+
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'article existe et si l'utilisateur a les droits nécessaires
+        if (!$article) {
+            $this->addFlash('error', 'Article non trouvé.');
+            return $this->redirectToRoute('liste_article');
+        }
+
+        if (!$user || $article->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            $this->addFlash('error', 'Vous n\'avez pas les droits nécessaires pour supprimer cet article.');
+            return $this->redirectToRoute('liste_article');
+        }
+
+        // Message de confirmation
+
+
+        // Supprimer l'article
+        $entityManager->remove($article);
+        $entityManager->flush();
+
+        // Ajouter un message flash pour indiquer le succès
+        $this->addFlash('success', 'Article supprimé avec succès.');
+
+        // Rediriger vers la liste des articles
+        return $this->redirectToRoute('liste_article');
+    }
+
+    #[Route('/article/{id}/confirm-delete', name: 'article_confirm_delete', methods: ['GET'])]
+    public function confirmDelete(int $id): Response
+    {
+        return $this->render('article/confirm_delete.html.twig', ['id' => $id]);
     }
 }

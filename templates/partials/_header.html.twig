@@ -50,3 +50,11 @@
 <span class="flex justify-center mB20">
 	<img src="{{ asset('assets/line.png') }}" alt="" class="w80">
 </span>
+<!-- FLASH MESSAGE-->
+{% for type, messages in app.flashes %}
+	{% for message in messages %}
+		<div class="flash">
+			{{ message }}
+		</div>
+	{% endfor %}
+{% endfor %}

@@ -40,7 +40,7 @@ class LikeController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'isLiked' => $isLiked,
-            'likeCount' => $likeCount
+            'likeCount' => $likeCount,
         ]);
     }
 }

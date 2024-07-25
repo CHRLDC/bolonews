@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	<div class="container-1200">
+		<h2 class="title-container">Liste des Utilisateurs</h2>
+
+		<div class="flex direction-column gap20">
+			{% for user in users %}
+				<div class="flex">
+					<div class="flex align-center gap20">
+						<div class="photo-profil">
+							<img src="{{ asset('private/img_profils/' ~ user.photo) }}" alt="Photo de profil de {{ user.pseudo }}">
+						</div>
+						<div class="flex direction-column">
+							<h3>{{ user.pseudo }}</h3>
+							<p class="author-name">Email:
+								{{ user.email }}</p>
+							<p class="author-name">Statut:
+								{{ user.statut }}</p>
+							<p class="author-name">Statut:
+								{{ user.roles | join(', ') }}</p>
+						</div>
+						<div class="flex gap16">
+							<a href="{{ path('user_edit', { id: user.id }) }}" class="button-container">
+								Modifier
+							</a>
+						</div>
+					</div>
+				</div>
+				<hr class="separation">
+			{% else %}
+				<p>Aucun utilisateur trouvé.</p>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

@@ -31,4 +31,9 @@ services:
             $likeRepository: '@App\Repository\LikeRepository'
         tags:
             - { name: 'twig.extension' }
+
+    # Register UserStatusListener
+    App\EventListener\UserStatusListener:
+        tags:
+            - { name: 'kernel.event_subscriber' }       
  

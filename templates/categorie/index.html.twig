@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Categorie index
+{% endblock %}
+
+{% block main %}
+	<div class="container-1200">
+		<h3 class="mB20">Gestion des categories</h3>
+		<p>
+			<b class="mB20">Libelle:</b>
+		</p>
+		{% for categorie in categories %}
+
+			<div class="flex gap16">
+				<p>
+					{{ categorie.libelle }}</p>
+				<a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">
+					<u>Modifier</u>
+				</a>
+
+				<a href="{{ path('app_categorie_delete', {'id': categorie.id}) }}">
+					<u>Supprimer</u>
+				</a>
+			</div>
+		{% else %}
+			<tr>
+				<td colspan="3">no records found</td>
+			</tr>
+		{% endfor %}
+		<div class="mT80">
+			<a href="{{ path('app_categorie_new') }}" class="btn-submit">Nouvelle Categorie</a>
+		</div>
+	</div>
+{% endblock %}

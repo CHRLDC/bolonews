@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'utilisateur
+{% endblock %}
+
+{% block main %}
+	<div class="container-1200 pT80 pB80">
+		<h1 class="title-container">Modifier l'utilisateur</h1>
+
+		<form method="post" action="{{ path('user_edit', { id: user.id }) }}" enctype="multipart/form-data" class="form-register">
+			{{ form_start(form) }}
+
+			<div class="form-group">
+				{{ form_row(form.email, {
+                'label': 'Adresse email',
+                'attr': {'class': 'form-control'}
+            }) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_row(form.pseudo, {
+                'label': 'Pseudo',
+                'attr': {'class': 'form-control'}
+            }) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_row(form.statut, {
+                'label': 'Statut',
+                'attr': {'class': 'form-control'}
+            }) }}
+			</div>
+
+			<div class="form-group">
+				{{ form_row(form.photo, {
+                'label': 'Modifier Photo de profil',
+                'attr': {'class': 'form-control'}
+            }) }}
+			</div>
+
+			<button type="submit" class="btn-submit">Enregistrer les modifications</button>
+
+			{{ form_end(form) }}
+		</form>
+	</div>
+{% endblock %}

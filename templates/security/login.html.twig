@@ -20,6 +20,13 @@
 				</div>
 			{% endif %}
 
+			{% if error %}
+				<div class="alert alert-danger">
+					<p class="orange">Votre compte est bloqué.</p>
+					<p></p>
+				</div>
+			{% endif %}
+
 			<div class="form-group">
 				<label for="username" class="form-label">Email</label>
 				<input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
@@ -34,5 +41,15 @@
 
 			<button class="btn-submit" type="submit">Se connecter</button>
 		</form>
+		bernard@test.fr est bloque
+		<br>
+		<br>
+		lucie@test.fr est autorise
+		<br>
+		<br>
+		admin@test.fr est admin
+		<br>
+		<br>
+		123456
 	</main>
 {% endblock %}
