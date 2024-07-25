@@ -20,6 +20,29 @@ Template de base: affiche la page de base
 	</head>
 
 	<body>
+		{# HEADER ADMIN #}
+		{%  if is_granted('ROLE_ADMIN') %}
+			<div class="texte-center admin">
+				<div class="mB10">
+					<p>
+						<b>Vous êtes ADMIN</b>
+					</p>
+				</div>
+				<ul class="flex gap16 justify-center">
+					<li>
+						<a href="">
+							<u>Utilisateurs</u>
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<u>Catégories</u>
+						</a>
+					</li>
+				</ul>
+				<div></div>
+			</div>
+		{% endif %}
 		{# Fragment HEADER #}
 		{% include 'partials/_header.html.twig' %}
 
@@ -29,9 +52,9 @@ Template de base: affiche la page de base
 		{# Fragment FOOTER #}
 		{% include 'partials/_footer.html.twig' %}
 
-		{# JAVASCRIPT #}
+	{# JAVASCRIPT #}
 
-		<script src="{{ asset('js/app.js') }}"></script>
+		 <script src="{{ asset('js/app.js') }}"></script>
 
 	</body>
 </html>

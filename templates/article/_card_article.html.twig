@@ -44,4 +44,9 @@ Rôle: Fragment qui affiche une carte article
 				</div>
 				<p class="mL10 like-count" data-article-id="{{ article.id }}">{{ article.likes|length }}</p>
 			</div>
+			{%  if is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('article_edit', {'id': article.id}) }}">
+					<u>Editer</u>
+				{% endif %}
+			</a>
 		</article>

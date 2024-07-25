@@ -43,15 +43,29 @@ Rôle: Fragment qui affiche les détails d'un l'article
 					<p>{{ article.user.pseudo }}</p>
 				</div>
 
-				<p><b><div>
-			{% if (article.user == app.user) %}
-				Vous êtes l'auteur de cet article. <a href="{{ path('article_edit', {'id': article.id}) }}"><u>Modifier</u></a>
-				{% if article.publie == false %}
-				<p class="orange">Cet article n'est pas publié.</p>
-				{% endif %}
-				
-			{% endif %}
-</div></b></p>
+				<p>
+					<b>
+						<div>
+							{% if (article.user == app.user) %}
+								Vous êtes l'auteur de cet article.
+								<a href="{{ path('article_edit', {'id': article.id}) }}">
+									<u>Modifier</u>
+								</a>
+								{% if article.publie == false %}
+									<p class="orange">Cet article n'est pas publié.</p>
+								{% endif %}
+
+							{% endif %}
+							{%  if is_granted('ROLE_ADMIN') %}
+								<p>
+									<a href="{{ path('article_edit', {'id': article.id}) }}">
+										<u>ADMIN Modifier</u>
+									</a>
+								</p>
+							{% endif %}
+						</div>
+					</b>
+				</p>
 
 				<!-- Container compteur like et commentaire -->
 				<div class="flex gap24">

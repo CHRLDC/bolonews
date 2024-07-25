@@ -25,9 +25,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-        # Register your Twig extension service
+    # Register your Twig extension service
     App\Services\Twig\MyFilters:
         arguments:
             $likeRepository: '@App\Repository\LikeRepository'
         tags:
             - { name: 'twig.extension' }
+ 

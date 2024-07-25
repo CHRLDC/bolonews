@@ -246,6 +246,15 @@ class ArticleController extends AbstractController
         // Trouver l'article à éditer
         $article = $entityManager->getRepository(Article::class)->find($id);
 
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si l'utilisateur est soit le propriétaire de l'article, soit un administrateur
+        if (!$user || $article->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            $this->addFlash('error', 'Vous n\'avez pas les droits nécessaires pour modifier cet article.');
+            return $this->redirectToRoute('liste_article');
+        }
+
         // Si l'article n'existe pas, rediriger vers la liste des articles
         if (!$article) {
             $this->addFlash('error', 'Article non trouvé.');
