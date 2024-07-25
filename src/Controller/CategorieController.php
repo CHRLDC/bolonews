@@ -25,6 +25,13 @@ class CategorieController extends AbstractController
     #[Route('/new', name: 'app_categorie_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        // Vérifier si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un article.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $categorie = new Categorie();
         $form = $this->createForm(CategorieType::class, $categorie);
         $form->handleRequest($request);

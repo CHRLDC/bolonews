@@ -155,6 +155,12 @@ class ArticleController extends AbstractController
     #[Route('/espace', name: 'espace_user', methods: ['GET', 'POST'])]
     public function espaceUser(ArticleRepository $articleRepository, Security $security): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            // Rediriger vers la page de connexion avec un message flash
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à votre espace.');
+            return $this->redirectToRoute('app_login');
+        }
         // Récupère l'utilisateur connecté
         $user = $security->getUser();
 
@@ -179,6 +185,12 @@ class ArticleController extends AbstractController
     #[Route('/article/new', name: 'article_new')]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer un article.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // Créer un nouvel objet Article
         $article = new Article();
 
