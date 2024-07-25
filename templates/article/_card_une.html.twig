@@ -39,14 +39,14 @@ Rôle: Fragment qui affiche l'article à la une (le plus populaire, nb_like, nb_
 				<div class="flex gap24">
 					<div class="flex">
 						<img class="picto" src="./assets/message-circle.svg" alt="">
-						<p>{{ articleUne.commentaires|length }}</p>
+						<p class="mL10">{{ articleUne.commentaires|length }}</p>
 					</div>
 					<div class="flex">
-						<img class="picto" src="./assets/coeur.svg" alt="">
-						<p>{{ articleUne.likes|length }}</p>
+						<img src="{{ asset('assets/coeur.svg') }}" class="picto-coeur {{ articleUne|isLiked(app.user) ? 'liked' : '' }}" data-article-id="{{ articleUne.id }}" alt="coeur">
+						<p class="mL10 like-count" data-article-id="{{ articleUne.id }}">{{ articleUne.likes|length }}</p>
 					</div>
 				</div>
 			</div>
 		</div>
-	</a>
+		</a>
 </article>

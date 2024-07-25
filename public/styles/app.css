@@ -185,6 +185,10 @@ img {
     margin-left: 30px;
 }
 
+.mL10 {
+    margin-left: 10px;
+}
+
 .mT80 {
     margin-top: 80px;
 }
@@ -318,6 +322,11 @@ h3 {
 }
 
 .picto {
+    width: 24px;
+    height: 24px;
+}
+
+.picto-coeur {
     width: 24px;
     height: 24px;
     cursor: pointer;
@@ -525,6 +534,10 @@ footer {
     margin-bottom: 30px;
 }
 
-.like-icon.liked {
+.liked {
     filter: brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(1000%) hue-rotate(160deg) brightness(90%) contrast(90%);
+}
+
+.orange {
+    color: red;
 }

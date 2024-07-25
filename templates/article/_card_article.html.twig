@@ -32,13 +32,16 @@ Rôle: Fragment qui affiche une carte article
 		</div>
 		<div class="flex gap24">
 			<div class="flex">
-				<img class="picto" src="{{ asset('assets/message-circle.svg') }}" alt="">
-				<p>{{ article.commentaires|length }}</p>
+				<div class="picto">
+					<img src="{{ asset('assets/message-circle.svg') }}" alt="">
+				</div>
+				<p class="mL10">{{ article.commentaires|length }}</p>
 			</div>
 			<div class="flex">
-				<!-- Icone like avec gestion de l'état du like -->
-				{# <img src="{{ asset('assets/coeur.svg') }}" class="like-icon {% if isLiked %}liked{% endif %}" data-article-id="{{ article.id }}" alt="coeur"> #}<p>{{ article.likes|length }}
-			</p>
-		</div>
-	</div>
-</div></article>
+				<div>
+					<!-- Icone like avec gestion de l'état du like -->
+					<img src="{{ asset('assets/coeur.svg') }}" class="picto-coeur {{ article|isLiked(app.user) ? 'liked' : '' }}" data-article-id="{{ article.id }}" alt="coeur">
+				</div>
+				<p class="mL10 like-count" data-article-id="{{ article.id }}">{{ article.likes|length }}</p>
+			</div>
+		</article>

@@ -9,6 +9,7 @@ use App\Form\CommentaireFormType;
 use App\Form\RechercheArticleType;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
+use App\Repository\LikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,7 +102,7 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/article/id={id}', name: 'article_details', methods: ['GET', 'POST'], requirements: ['libelle' => '^(?!new$).*'])]
-    public function article(Request $request, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
+    public function article(Request $request, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, LikeRepository $likeRepository): Response
     {
         // Obtenir l'article par son id
         $article = $articleRepository->find($id);
@@ -134,13 +135,16 @@ class ArticleController extends AbstractController
             $entityManager->flush();
 
             // Rediriger vers l'article
-            return $this->redirectToRoute('article_details', ['id' => $article->getId()]);
+            return $this->redirectToRoute('article_details', [
+                'id' => $article->getId(),
+            ]);
         }
 
         // Rendre la page d'un article à l'Index avec ses paramètres
         return $this->render('article/details_article.html.twig', [
             'article' => $article,
             'form' => $commentaireForm->createView(),
+
         ]);
     }
 
